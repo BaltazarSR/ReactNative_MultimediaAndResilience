@@ -13,7 +13,15 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "fetch",
+          "fetch"
+        ],
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "bundleIdentifier": "com.baltazarsr.multimediaresilience"
     },
     "android": {
       "adaptiveIcon": {
@@ -21,7 +29,14 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.WAKE_LOCK",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.WAKE_LOCK"
+      ],
+      "package": "com.baltazarsr.multimediaresilience"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -29,7 +44,19 @@
     "plugins": [
       "expo-font",
       "expo-sqlite",
-      "expo-background-fetch"
-    ]
+      [
+        "expo-background-fetch",
+        {
+          "ios":{
+            "backgroundModes":["fetch"]
+          }
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "24c941ba-1e67-417d-8786-8e5eead05916"
+      }
+    }
   }
 }

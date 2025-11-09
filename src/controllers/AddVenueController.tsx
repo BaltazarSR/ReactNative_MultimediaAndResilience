@@ -3,6 +3,7 @@ import * as Notifications from 'expo-notifications';
 import { useState, useEffect } from 'react';
 import { simulateAPI } from '../services/api/mockAPIService';
 import { VenueData } from '../models/VenueDataModel';
+import { logger } from '../utils/logger';
 
 export const AddVenueController = () => {
     const [venueName, setVenueName] = useState('');
@@ -20,7 +21,7 @@ export const AddVenueController = () => {
             setTotalVenues(total);
             setUnsyncedVenues(unsynced);
         } catch (error) {
-            console.error('Error loading counts:', error);
+            logger.error('[AddVenue Controller] Error loading counts:', error);
         }
     };
 
@@ -40,7 +41,7 @@ export const AddVenueController = () => {
 
             const offsetCoords = addRandomOffset(venueData.lat, venueData.lon);
 
-            console.log('Adding venue:', {
+            logger.log('[AddVenue Controller] Adding venue:', {
                 name: venueData.venueName,
                 lat: offsetCoords.lat,
                 lon: offsetCoords.lon
@@ -56,15 +57,15 @@ export const AddVenueController = () => {
 
                 await loadCounts();
                 setVenueName('');
-                console.log('Venue added successfully');
+                logger.log('[AddVenue Controller] Venue added successfully');
             } catch (error) {
-                console.error('Error adding venue:', error);
+                logger.error('[AddVenue Controller] Error adding venue:', error);
             }
         }
     }
 
     const handleSyncNow = async () => {
-        console.log('trying to sync');
+        logger.log('[AddVenue Controller] Trying to sync');
 
         try {
             if (unsyncedVenues > 0) {
@@ -72,7 +73,7 @@ export const AddVenueController = () => {
                 await DatabaseService.markAllAsSynced();
                 await loadCounts();
                 
-                console.log('Sync completed');
+                logger.log('[AddVenue Controller] Sync completed');
                 
                 // Display native notification
                 await Notifications.scheduleNotificationAsync({
@@ -84,10 +85,10 @@ export const AddVenueController = () => {
                     trigger: null,
                 });
             } else {
-                console.log("No venues to sync")
+                logger.log("[AddVenue Controller] No venues to sync")
             }
         } catch (error) {
-            console.error('Error syncing:', error);
+            logger.warn('[AddVenue Controller] Error syncing:', error);
             
             await Notifications.scheduleNotificationAsync({
                 content: {

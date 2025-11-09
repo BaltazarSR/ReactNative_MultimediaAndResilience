@@ -1,20 +1,23 @@
 import * as TaskManager from 'expo-task-manager';
+import * as BackgroundFetch from 'expo-background-fetch';
 import * as Notifications from 'expo-notifications';
-import { Platform } from 'react-native';
 import { simulateAPI } from '../api/mockAPIService';
 import DatabaseService from '../database/DatabaseService';
+import { logger } from '../../utils/logger';
 
 const BACKGROUND_SYNC_TASK = 'background-sync-task';
 
+// Define the background task
 TaskManager.defineTask(BACKGROUND_SYNC_TASK, async () => {
     try {
-        console.log('Background sync started');
+        logger.log('[Sync Service] Background fetch sync started');
         
         const unsyncedCount = await DatabaseService.getUnsyncedCount();
         
         if (unsyncedCount > 0) {
-            await simulateAPI()
+            await simulateAPI();
             await DatabaseService.markAllAsSynced();
+            
             await Notifications.scheduleNotificationAsync({
                 content: {
                     title: 'Sync Successful',
@@ -23,33 +26,37 @@ TaskManager.defineTask(BACKGROUND_SYNC_TASK, async () => {
                 },
                 trigger: null,
             });
-            return { success: true };
+            
+            logger.log(`[Sync Service] Successfully synced ${unsyncedCount} venues`);
+            return BackgroundFetch.BackgroundFetchResult.NewData;
         }
-        return { success: true };
+        
+        logger.log('[Sync Service] No venues to sync');
+        return BackgroundFetch.BackgroundFetchResult.NoData;
 
     } catch (error) {
-        console.error('Background sync failed:', error);
+        logger.warn('[Sync Service] Background fetch sync failed:', error);
+        
         await Notifications.scheduleNotificationAsync({
             content: {
                 title: 'Sync Failed',
-                body: 'Trying again',
+                body: 'Will retry automatically',
                 sound: true,
             },
             trigger: null,
         });
-        return { success: false };
+        
+        return BackgroundFetch.BackgroundFetchResult.Failed;
     }
 });
 
 class SyncService {
-    private foregroundSyncInterval: NodeJS.Timeout | null = null;
-
     async performSync(showNotifications: boolean = false): Promise<boolean> {
         try {
             const unsyncedCount = await DatabaseService.getUnsyncedCount();
             
             if (unsyncedCount > 0) {
-                console.log(`Auto-syncing ${unsyncedCount} venues...`);
+                logger.log(`[Sync Service] Syncing ${unsyncedCount} venues...`);
                 await simulateAPI();
                 await DatabaseService.markAllAsSynced();
                 
@@ -67,16 +74,16 @@ class SyncService {
                 return true;
             }
             
-            console.log('No venues to sync');
+            logger.log('[Sync Service] No venues to sync');
             return true;
         } catch (error) {
-            console.error('Auto-sync error:', error);
+            logger.warn('[Sync Service] Sync error:', error);
             
             if (showNotifications) {
                 await Notifications.scheduleNotificationAsync({
                     content: {
                         title: 'Sync Failed',
-                        body: 'Will retry automatically in 5 minutes',
+                        body: 'Will retry automatically',
                         sound: true,
                     },
                     trigger: null,
@@ -87,62 +94,40 @@ class SyncService {
         }
     }
 
-    async startForegroundSync() {
-        this.stopForegroundSync();
-        
-        // Sync every 5 minutes in foreground
-        this.foregroundSyncInterval = setInterval(() => {
-            this.performSync(true);
-        }, 5 * 60 * 1000);
-        
-        console.log('Foreground sync started (5 min intervals)');
-        
-        // Run immediately on start
-        await this.performSync(true);
-    }
-
-    stopForegroundSync() {
-        if (this.foregroundSyncInterval) {
-            clearInterval(this.foregroundSyncInterval);
-            this.foregroundSyncInterval = null;
-            console.log('Foreground sync stopped');
-        }
-    }
-
-    async registerBackgroundSync() {
+    async registerBackgroundFetch() {
         try {
-            if (Platform.OS === 'android') {
-                console.log('Background tasks on Android require additional setup');
-                console.log('Using foreground sync instead');
-            } else if (Platform.OS === 'ios') {
-                console.log('iOS background tasks require additional native configuration');
-                console.log('Using foreground sync instead');
-            }
+            // Check if already registered
+            const isRegistered = await TaskManager.isTaskRegisteredAsync(BACKGROUND_SYNC_TASK);
             
-            console.log('Background sync registration attempted');
+            if (isRegistered) {
+                logger.log('[Sync Service] Background fetch already registered');
+                return;
+            }
+
+            // Register background fetch
+            await BackgroundFetch.registerTaskAsync(BACKGROUND_SYNC_TASK, {
+                minimumInterval: 15 * 60,
+                stopOnTerminate: false,
+                startOnBoot: true,
+            });
+            
+            logger.log('[Sync Service] Background fetch registered successfully');
+            logger.log('[Sync Service] Will sync every 15+ minutes');
         } catch (error) {
-            console.error('Error registering background sync:', error);
+            logger.error('[Sync Service] Error registering background fetch:', error);
         }
     }
 
-    async unregisterBackgroundSync() {
+    async getBackgroundFetchStatus(): Promise<BackgroundFetch.BackgroundFetchStatus> {
         try {
-            await TaskManager.unregisterTaskAsync(BACKGROUND_SYNC_TASK);
-            console.log('Background sync unregistered');
+            const status = await BackgroundFetch.getStatusAsync();
+            logger.log('[Sync Service] Background fetch status:', status);
+            return status ?? BackgroundFetch.BackgroundFetchStatus.Restricted;
         } catch (error) {
-            console.error('Error unregistering background sync:', error);
+            logger.error('[Sync Service] Error getting background fetch status:', error);
+            return BackgroundFetch.BackgroundFetchStatus.Restricted;
         }
     }
-
-    async isRegistered(): Promise<boolean> {
-        try {
-            return await TaskManager.isTaskRegisteredAsync(BACKGROUND_SYNC_TASK);
-        } catch (error) {
-            console.error('Error checking registration:', error);
-            return false;
-        }
-    }
-  
 }
 
 export default new SyncService();

@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback } from 'react';
 import DatabaseService from '../services/database/DatabaseService';
 import { MarkerData } from '../models/MarkerDataModel';
 import { NavigationProp } from '../models/RootParamsListModel';
+import { logger } from '../utils/logger';
 
 export const MapController = () => {
     const navigation = useNavigation<NavigationProp>();
@@ -20,7 +21,7 @@ export const MapController = () => {
     );
 
     const getMarkers = async () => {
-        console.log("getting markers")
+        logger.log("[Map Controller] Getting markers")
 
         try {
             const venues = await DatabaseService.getAllVenues();
@@ -33,21 +34,26 @@ export const MapController = () => {
             }));
             setMarkers(markersData);
         } catch (error) {
-            console.error('Error loading markers:', error);
+            logger.error('[Map Controller] Error loading markers:', error);
         }
     };
 
+    const handleMusicListNavigation = () => {
+        logger.log('[Map Controller] Navigation to: MusicList');
+        navigation.navigate('MusicList');
+    }
+
     const handleDatabaseNavigation = () => {
-        console.log('Navigation to: Database');
+        logger.log('[Map Controller] Navigation to: Database');
         navigation.navigate('Database');
     }
 
     const handleMarkerPress = (markerData: any) => {
-        console.log('Marker pressed:', markerData);
+        logger.log('[Map Controller] Marker pressed:', markerData);
     };
 
     const handleCreateVenuePress = (venueData: any) => {
-        console.log('Navigation to AddVenue with coords:', venueData);
+        logger.log('[Map Controller] Navigation to AddVenue with coords:', venueData);
         navigation.navigate('VenueRegistration', {
             lat: venueData.lat,
             lon: venueData.lon
@@ -56,6 +62,7 @@ export const MapController = () => {
 
     return {
         markers,
+        handleMusicListNavigation,
         handleDatabaseNavigation,
         handleMarkerPress,
         handleCreateVenuePress,

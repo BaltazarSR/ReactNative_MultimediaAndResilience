@@ -50,7 +50,7 @@ export default function DatabaseScreen() {
       </TouchableOpacity>
 
       <Text style={styles.title}>SQLite Database</Text>
-      <Text style={styles.subTitle}>Table: transactions</Text>
+      <Text style={styles.subTitle}>Table: venues</Text>
 
       <View style={styles.statsContainer}>
         <View style={styles.statBox}>

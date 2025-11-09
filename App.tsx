@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import DatabaseService from './src/services/database/DatabaseService';
 import * as Notifications from 'expo-notifications';
 import SyncService from './src/services/background/SyncService';
+import { logger } from './src/utils/logger';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -39,7 +40,7 @@ export default function App() {
 
       // Init database
       await DatabaseService.initDatabase();
-      console.log('Database ready');
+      logger.log('[App] Database ready');
       
       // Request notification permissions
       if (Platform.OS === 'android') {
@@ -52,16 +53,18 @@ export default function App() {
       }
       const { status } = await Notifications.requestPermissionsAsync();
       if (status !== 'granted') {
-        console.log('Notification permissions not granted');
+        logger.log('[App] Notification permissions not granted');
       }
 
-      // Register foreground sync (background required native implementation)
-      await SyncService.startForegroundSync();
-      console.log('Foreground sync enabled');
+      // Register background fetch for automatic syncing
+      await SyncService.registerBackgroundFetch();
+      
+      // Check background fetch status
+      const bgStatus = await SyncService.getBackgroundFetchStatus();
 
-      console.log('App initialized');
+      logger.log('[App] App initialized');
     } catch (error) {
-      console.error('Error initializing app:', error);//
+      logger.error('[App] Error initializing app:', error);//
     }
   };
 
@@ -71,18 +74,17 @@ export default function App() {
     }
   }, [loaded, error]);
 
-  useEffect(() => {
-    const subscription = AppState.addEventListener('change', async (nextAppState) => {
-      if (nextAppState === 'active') {
-        await SyncService.performSync(true);
-      }
-    });
+  // useEffect(() => {
+  //   const subscription = AppState.addEventListener('change', async (nextAppState) => {
+  //     if (nextAppState === 'active') {
+  //       await SyncService.performSync(true);
+  //     }
+  //   });
 
-    return () => {
-      subscription.remove();
-      SyncService.stopForegroundSync();
-    };
-  }, []);
+  //   return () => {
+  //     subscription.remove();
+  //   };
+  // }, []);
 
   if (!loaded && !error) {
     return null;

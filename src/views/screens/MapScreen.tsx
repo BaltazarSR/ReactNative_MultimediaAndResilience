@@ -2,11 +2,12 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { MapController } from '../../controllers/MapController';
-import { PinIcon, DatabaseIcon } from '../components/Icon';
+import { PinIcon, DatabaseIcon, MusicIcon } from '../components/Icon';
 
 export default function MapScreen() {
   const {
     markers,
+    handleMusicListNavigation,
     handleDatabaseNavigation,
     handleMarkerPress,
     handleCreateVenuePress
@@ -39,7 +40,20 @@ export default function MapScreen() {
           />
         ))}
       </MapView>
-      <View style = {styles.buttonsContainer}>
+      <View style = {styles.upButtonsContainer}>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity 
+            style={styles.button}
+            onPress={handleMusicListNavigation}
+          >
+            <MusicIcon
+              color='black'
+              size={36} 
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View style = {styles.downButtonsContainer}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity 
             style={styles.button}
@@ -101,13 +115,21 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3,
   },
-  buttonsContainer: {
+  downButtonsContainer: {
     flexDirection: 'row',
     alignItems: 'stretch',
     justifyContent: 'space-between',
     position: 'absolute',
     bottom:30,
     left: 20,
+    right: 20,
+  },
+  upButtonsContainer: {
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    justifyContent: 'space-between',
+    position: 'absolute',
+    top:60,
     right: 20,
   },
   buttonLabel: {

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Venue } from '../models/DBVenueDataModel';
 import { NavigationProp } from '../models/RootParamsListModel';
 import DatabaseService from '../services/database/DatabaseService';
+import { logger } from '../utils/logger';
 
 export const DatabaseController = () => {
     const navigation = useNavigation<NavigationProp>();
@@ -36,7 +37,7 @@ export const DatabaseController = () => {
             setSyncedVenues(synced);
             setUnsyncedVenues(unsynced);
         } catch (error) {
-            console.error('Error loading counts:', error);
+            logger.error('[Database Controller] Error loading counts:', error);
         }
     };
 
@@ -58,12 +59,12 @@ export const DatabaseController = () => {
             
             setFilteredVenues(venues);
         } catch (error) {
-            console.error('Error loading filtered venues:', error);
+            logger.error('[Database Controller] Error loading filtered venues:', error);
         }
     };
 
     const handleGoBack = () => {
-        console.log('Go back to MapScreen');
+        logger.log('[Database Controller] Go back to MapScreen');
         navigation.goBack()
     }
 

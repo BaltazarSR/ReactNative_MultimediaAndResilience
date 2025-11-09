@@ -1,5 +1,6 @@
 import * as SQLite from 'expo-sqlite'
 import { Venue } from '../../models/DBVenueDataModel';
+import { logger } from '../../utils/logger';
 
 const db = SQLite.openDatabaseSync('venues.db');
 
@@ -17,9 +18,9 @@ class DatabaseService {
                     created_at TEXT DEFAULT CURRENT_TIMESTAMP
                 );
             `);
-            console.log('Database initialized successfully');
+            logger.log('[Database Service] Database initialized successfully');
         } catch (error) {
-            console.error('Error initializing the database', error);
+            logger.error('[Database Service] Error initializing the database', error);
             throw error;
         }
     }
@@ -30,10 +31,10 @@ class DatabaseService {
                 'INSERT INTO venues (name, lat, lon, synced) VALUES (?, ?, ?, ?)',
                 [venue.name, venue.lat, venue.lon, venue.synced]
             );
-            console.log('Venue added with ID:', result.lastInsertRowId);
+            logger.log('[Database Service] Venue added');
             return result.lastInsertRowId;
         } catch (error) {
-            console.error('Error adding venue:', error);
+            logger.error('[Database Service] Error adding venue:', error);
             throw error;
         }
     }
@@ -43,7 +44,7 @@ class DatabaseService {
             const venues = await db.getAllAsync<Venue>('SELECT * FROM venues ORDER BY created_at DESC');
             return venues;
         } catch (error) {
-            console.error('Error getting all venues:', error);
+            logger.error('[Database Service] Error getting all venues:', error);
             throw error;
         }
     }
@@ -53,7 +54,7 @@ class DatabaseService {
             const venues = await db.getAllAsync<Venue>('SELECT * FROM venues WHERE synced = 1 ORDER BY created_at DESC');
             return venues;
         } catch (error) {
-            console.error('Error getting synced venues:', error);
+            logger.error('[Database Service] Error getting synced venues:', error);
             throw error;
         }
     }
@@ -63,7 +64,7 @@ class DatabaseService {
             const venues = await db.getAllAsync<Venue>('SELECT * FROM venues WHERE synced = 0 ORDER BY created_at DESC');
             return venues;
         } catch (error) {
-            console.error('Error getting unsynced venues:', error);
+            logger.error('[Database Service] Error getting unsynced venues:', error);
             throw error;
         }
     }
@@ -71,9 +72,9 @@ class DatabaseService {
     async markVenueAsSynced(id: number): Promise<void> {
         try {
             await db.runAsync('UPDATE venues SET synced = 1 WHERE id = ?', [id]);
-            console.log('Venue marked as synced:', id);
+            logger.log('[Database Service] Venue marked as synced');
         } catch (error) {
-            console.error('Error marking venue as synced:', error);
+            logger.error('[Database Service] Error marking venue as synced:', error);
             throw error;
         }
     }
@@ -81,9 +82,9 @@ class DatabaseService {
     async markAllAsSynced(): Promise<void> {
         try {
             await db.runAsync('UPDATE venues SET synced = 1 WHERE synced = 0');
-            console.log('All venues marked as synced');
+            logger.log('[Database Service] All venues marked as synced');
         } catch (error) {
-            console.error('Error marking all venues as synced:', error);
+            logger.error('[Database Service] Error marking all venues as synced:', error);
             throw error;
         }
     }
@@ -93,7 +94,7 @@ class DatabaseService {
             const result = await db.getFirstAsync<{ count: number }>('SELECT COUNT(*) as count FROM venues');
             return result?.count || 0;
         } catch (error) {
-            console.error('Error getting total count:', error);
+            logger.error('[Database Service] Error getting total count:', error);
             throw error;
         }
     }
@@ -103,7 +104,7 @@ class DatabaseService {
             const result = await db.getFirstAsync<{ count: number }>('SELECT COUNT(*) as count FROM venues WHERE synced = 1');
             return result?.count || 0;
         } catch (error) {
-            console.error('Error getting synced count:', error);
+            logger.error('[Database Service] Error getting synced count:', error);
             throw error;
         }
     }
@@ -113,7 +114,7 @@ class DatabaseService {
             const result = await db.getFirstAsync<{ count: number }>('SELECT COUNT(*) as count FROM venues WHERE synced = 0');
             return result?.count || 0;
         } catch (error) {
-            console.error('Error getting unsynced count:', error);
+            logger.error('[Database Service] Error getting unsynced count:', error);
             throw error;
         }
     }
@@ -121,9 +122,9 @@ class DatabaseService {
     async deleteVenue(id: number): Promise<void> {
         try {
             await db.runAsync('DELETE FROM venues WHERE id = ?', [id]);
-            console.log('Venue deleted:', id);
+            logger.log('[Database Service] Venue deleted');
         } catch (error) {
-            console.error('Error deleting venue:', error);
+            logger.error('[Database Service] Error deleting venue:', error);
             throw error;
         }
     }
