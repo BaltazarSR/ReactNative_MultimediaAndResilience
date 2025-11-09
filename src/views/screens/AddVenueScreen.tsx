@@ -1,15 +1,7 @@
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { AddVenueController } from '../../controllers/AddVenueController';
-
-interface AddVenueScreenProps {
-  route?: {
-    params?: {
-      lat?: number;
-      lon?: number;
-    };
-  };
-}
+import { AddVenueScreenProps } from '../../models/AddVenueScreenPropsModel';
 
 export default function AddVenueScreen({ route }: AddVenueScreenProps) {
 

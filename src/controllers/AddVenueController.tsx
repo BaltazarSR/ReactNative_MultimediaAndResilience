@@ -1,13 +1,8 @@
-import { useState, useEffect } from 'react';
 import DatabaseService from '../services/database/DatabaseService';
 import * as Notifications from 'expo-notifications';
+import { useState, useEffect } from 'react';
 import { simulateAPI } from '../services/api/mockAPIService';
-
-interface VenueData {
-  venueName: string;
-  lat: number;
-  lon: number;
-}
+import { VenueData } from '../models/VenueDataModel';
 
 export const AddVenueController = () => {
     const [venueName, setVenueName] = useState('');

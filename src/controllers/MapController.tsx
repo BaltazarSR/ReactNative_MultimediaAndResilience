@@ -1,18 +1,8 @@
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../navigation/AppNavigator';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useEffect, useState, useCallback } from 'react';
 import DatabaseService from '../services/database/DatabaseService';
-
-type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
-
-interface MarkerData {
-  id: string;
-  lat: number;
-  lon: number;
-  title: string;
-  description?: string;
-}
+import { MarkerData } from '../models/MarkerDataModel';
+import { NavigationProp } from '../models/RootParamsListModel';
 
 export const MapController = () => {
     const navigation = useNavigation<NavigationProp>();

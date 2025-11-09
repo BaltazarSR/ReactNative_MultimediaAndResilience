@@ -1,11 +1,8 @@
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../navigation/AppNavigator';
 import { useNavigation } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
+import { Venue } from '../models/DBVenueDataModel';
+import { NavigationProp } from '../models/RootParamsListModel';
 import DatabaseService from '../services/database/DatabaseService';
-import { Venue } from '../services/database/DatabaseService';
-
-type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const DatabaseController = () => {
     const navigation = useNavigation<NavigationProp>();

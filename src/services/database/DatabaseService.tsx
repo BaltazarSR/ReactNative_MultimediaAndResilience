@@ -1,15 +1,7 @@
 import * as SQLite from 'expo-sqlite'
+import { Venue } from '../../models/DBVenueDataModel';
 
 const db = SQLite.openDatabaseSync('venues.db');
-
-export interface Venue {
-    id?: number;
-    name: string;
-    lat: number;
-    lon: number;
-    synced: number;
-    created_at: string;
-}
 
 class DatabaseService {
 

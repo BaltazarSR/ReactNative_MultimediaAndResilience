@@ -1,11 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-
-// Controller
 import { MapController } from '../../controllers/MapController';
-
-// Assets
 import { PinIcon, DatabaseIcon } from '../components/Icon';
 
 export default function MapScreen() {

@@ -3,15 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MapScreen from '../views/screens/MapScreen';
 import DatabaseScreen from '../views/screens/DatabaseScreen';
 import AddVenueScreen from '../views/screens/AddVenueScreen';
-
-export type RootStackParamList = {
-    Map: undefined;
-    Database: undefined;
-    VenueRegistration: {
-        lat: number;
-        lon: number;
-    };
-};
+import { RootStackParamList } from '../models/RootParamsListModel';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 

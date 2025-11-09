@@ -1,10 +1,6 @@
 import { StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-
-// Controller
 import { DatabaseController } from '../../controllers/DatabaseController';
-
-// Assets
 import { BackChevronIcon } from '../components/Icon'
 
 export default function DatabaseScreen() {

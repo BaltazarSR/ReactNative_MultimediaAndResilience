@@ -1,8 +1,8 @@
 import * as TaskManager from 'expo-task-manager';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
-import DatabaseService from '../database/DatabaseService';
 import { simulateAPI } from '../api/mockAPIService';
+import DatabaseService from '../database/DatabaseService';
 
 const BACKGROUND_SYNC_TASK = 'background-sync-task';
 
