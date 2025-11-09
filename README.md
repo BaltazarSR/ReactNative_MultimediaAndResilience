@@ -293,6 +293,9 @@ npm run ios -- --verbose
 npm run android -- --verbose
 ```
 
+### Video Demonstration
+[![Watch the video](https://youtu.be/D1KIROBly_0)
+
 ### Screenshots
 
 <img width="270" height="508" alt="Screenshot 2025-11-09 at 2 57 05 p m" src="https://github.com/user-attachments/assets/fd8ffedd-7186-48c3-ac0d-235e66851f96" />
