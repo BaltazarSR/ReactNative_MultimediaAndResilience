@@ -294,3 +294,10 @@ npm run android -- --verbose
 ```
 
 ### Screenshots
+
+<img width="539" height="1016" alt="Screenshot 2025-11-09 at 2 57 05 p m" src="https://github.com/user-attachments/assets/fd8ffedd-7186-48c3-ac0d-235e66851f96" />
+<img width="539" height="1016" alt="Screenshot 2025-11-09 at 2 57 16 p m" src="https://github.com/user-attachments/assets/ff4c30ce-a211-40d9-a430-510e64129810" />
+<img width="539" height="1016" alt="Screenshot 2025-11-09 at 2 57 54 p m" src="https://github.com/user-attachments/assets/111ecac9-1d8a-4728-b729-c807aa8acc27" />
+<img width="539" height="1016" alt="Screenshot 2025-11-09 at 2 58 31 p m" src="https://github.com/user-attachments/assets/70d5db57-a947-44e3-b6a3-20051a728294" />
+<img width="539" height="1016" alt="Screenshot 2025-11-09 at 2 58 37 p m" src="https://github.com/user-attachments/assets/40483640-0d06-4a52-a365-816d5853b1b0" />
+<img width="539" height="1016" alt="Screenshot 2025-11-09 at 2 58 42 p m" src="https://github.com/user-attachments/assets/b421b2af-ae83-4fd2-8e9f-39e6e2d08011" />
