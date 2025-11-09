@@ -294,7 +294,8 @@ npm run android -- --verbose
 ```
 
 ### Video Demonstration
-[![Watch the video](https://youtu.be/D1KIROBly_0)
+
+[![Watch the video](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://youtu.be/D1KIROBly_0)
 
 ### Screenshots
 
