@@ -8,7 +8,20 @@ import DatabaseService from './src/services/database/DatabaseService';
 import * as Notifications from 'expo-notifications';
 import SyncService from './src/services/background/SyncService';
 import { logger } from './src/utils/logger';
+import * as Sentry from '@sentry/react-native';
 
+// Initialize Sentry for error tracking
+Sentry.init({
+  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
+  debug: __DEV__,
+  tracesSampleRate: 1.0,
+  environment: __DEV__ ? 'development' : 'production',
+  enableAutoSessionTracking: true,
+  sessionTrackingIntervalMillis: 30000,
+  enabled: !!process.env.EXPO_PUBLIC_SENTRY_DSN,
+});
+
+// Initialize Notification properties
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldPlaySound: true,
@@ -20,7 +33,7 @@ Notifications.setNotificationHandler({
 
 SplashScreen.preventAutoHideAsync();
 
-export default function App() {
+function App() {
 
   const [loaded, error] = useFonts({
     'StackSans-ExtraLight': require('./assets/fonts/StackSansText-ExtraLight.ttf'),
@@ -74,18 +87,6 @@ export default function App() {
     }
   }, [loaded, error]);
 
-  // useEffect(() => {
-  //   const subscription = AppState.addEventListener('change', async (nextAppState) => {
-  //     if (nextAppState === 'active') {
-  //       await SyncService.performSync(true);
-  //     }
-  //   });
-
-  //   return () => {
-  //     subscription.remove();
-  //   };
-  // }, []);
-
   if (!loaded && !error) {
     return null;
   }
@@ -98,20 +99,9 @@ export default function App() {
   );
 }
 
+// Wrap App with Sentry
+export default Sentry.wrap(App);
+
 const styles = StyleSheet.create({
 
 });
-
-
-
-
-
-// 5 minute video showing functionality and explaining code
-
-
-
-// Resilience
-// Show unsynced transactions
-// Notifications when sync was succesfull
-// Save transaction in SQLite
-// Mock API with errors
